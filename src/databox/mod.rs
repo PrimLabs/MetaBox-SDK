@@ -591,7 +591,7 @@ pub async fn get_avl_sm(pem_identity_path: &str, data_box_canister_id_text: &str
 ///     println!("data box owner: {:?}", get_owner("4radi-oqaaa-aaaan-qapwa-cai").await.to_text());
 /// }
 /// ```
-pub async fn get_owner(pem_identity_path: &str, data_box_canister_id_text: &str,) -> Principal {
+pub async fn get_owner(pem_identity_path: &str, data_box_canister_id_text: &str,) -> candid::Principal {
     let canister_id = Principal::from_text(data_box_canister_id_text).unwrap();
     let response_blob = build_agent(pem_identity_path)
         .query(&canister_id, "getOwner")
@@ -599,7 +599,7 @@ pub async fn get_owner(pem_identity_path: &str, data_box_canister_id_text: &str,
         .call()
         .await
         .expect("response error");
-    let response = Decode!(&response_blob, Principal).unwrap();
+    let response = Decode!(&response_blob, candid::Principal).unwrap();
     response
 }
 

@@ -1,7 +1,6 @@
 use ic_cdk::export::candid::{self, CandidType, Deserialize};
 use ic_cdk::api::call::CallResult;
-use ic_agent::ic_types::Principal;
-use candid::{Nat};
+use candid::{Nat, Principal};
 
 #[derive(CandidType, Deserialize, Debug)]
 pub struct State {
