@@ -1,0 +1,274 @@
+type ThumbNail = 
+ record {
+   file_extension: text;
+   image: blob;
+ };
+type StreamingToken__1 = 
+ record {
+   index: nat;
+   key: text;
+ };
+type StreamingToken = 
+ record {
+   index: nat;
+   key: text;
+ };
+type StreamingStrategy = variant {
+                           Callback:
+                            record {
+                              callback:
+                               func (StreamingToken__1) ->
+                                (StreamingCallbackHttpResponse__1) query;
+                              token: StreamingToken__1;
+                            };};
+type StreamingCallbackHttpResponse__1 = 
+ record {
+   body: blob;
+   token: opt StreamingToken__1;
+ };
+type StreamingCallbackHttpResponse = 
+ record {
+   body: blob;
+   token: opt StreamingToken__1;
+ };
+type State = 
+ record {
+   balance: nat;
+   memory_size: nat;
+   stable_memory_size: nat64;
+ };
+type Result_9 = 
+ variant {
+   err: DataErr;
+   ok: vec blob;
+ };
+type Result_8 = 
+ variant {
+   err: DataErr;
+   ok: vec principal;
+ };
+type Result_7 = 
+ variant {
+   err: DataErr;
+   ok: OtherFile;
+ };
+type Result_6 = 
+ variant {
+   err: DataErr;
+   ok: blob;
+ };
+type Result_5 = 
+ variant {
+   err: DataErr;
+   ok: vec FileExt;
+ };
+type Result_4 = 
+ variant {
+   err: DataErr;
+   ok: ThumbNail;
+ };
+type Result_3 = 
+ variant {
+   err: DataErr;
+   ok: FileExt;
+ };
+type Result_2 = 
+ variant {
+   err: DataErr;
+   ok: bool;
+ };
+type Result_13 = 
+ variant {
+   err: DataErr;
+   ok: nat64;
+ };
+type Result_12 = 
+ variant {
+   err: DataErr;
+   ok: State;
+ };
+type Result_11 = 
+ variant {
+   err: DataErr;
+   ok: nat;
+ };
+type Result_10 = 
+ variant {
+   err: DataErr;
+   ok:
+    record {
+      vec FileExt;
+      vec FileExt;
+      vec FileExt;
+      vec OtherFile;
+      vec OtherFile;
+    };
+ };
+type Result_1 = 
+ variant {
+   err: DataErr;
+   ok: text;
+ };
+type Result = 
+ variant {
+   err: DataErr;
+   ok;
+ };
+type PUT = 
+ variant {
+   segment:
+    record {
+      aes_pub_key: opt text;
+      chunk: Chunk;
+      chunk_number: nat;
+      file_extension: text;
+      file_key: text;
+      file_name: text;
+      order: nat;
+      total_size: nat64;
+    };
+   thumb_nail:
+    record {
+      aes_pub_key: opt text;
+      file_extension: text;
+      file_key: text;
+      file_name: text;
+      image: blob;
+    };
+ };
+type OtherFile = 
+ record {
+   file_extension: text;
+   file_key: text;
+   file_location: FileLocation;
+   file_name: text;
+   file_url: text;
+ };
+type HttpResponse = 
+ record {
+   body: blob;
+   headers: vec HeaderField;
+   status_code: nat16;
+   streaming_strategy: opt StreamingStrategy;
+ };
+type HttpRequest = 
+ record {
+   body: vec nat8;
+   headers: vec HeaderField;
+   method: text;
+   url: text;
+ };
+type HeaderField = 
+ record {
+   text;
+   text;
+ };
+type GET = 
+ record {
+   file_key: text;
+   flag: nat;
+ };
+type FilePut = 
+ variant {
+   EncryptFilePut: PUT;
+   PlainFilePut: PUT;
+   SharedFilePut:
+    record {
+      aes_pub_key: opt text;
+      description: text;
+      file_extension: text;
+      file_key: text;
+      file_name: text;
+      isPublic: bool;
+      other: principal;
+    };
+ };
+type FileLocation__1 = 
+ variant {
+   Arweave;
+   IPFS;
+ };
+type FileLocation = 
+ variant {
+   Arweave;
+   IPFS;
+ };
+type FileExt = 
+ variant {
+   EncryptFileExt: AssetExt;
+   PlainFileExt: AssetExt;
+   SharedFileExt:
+    record {
+      description: text;
+      file_extension: text;
+      file_key: text;
+      file_name: text;
+      isPublic: bool;
+      other: principal;
+    };
+ };
+type DataErr = 
+ variant {
+   BlobSizeError;
+   DeviceNotExist;
+   FileAesPubKeyNotExist;
+   FileKeyErr;
+   FilePublic;
+   FileRepeat;
+   FlagErr;
+   MemoryInsufficient;
+   PermissionDenied;
+   ShareRepeat;
+   SharedNotSet;
+   SharedRepeat;
+   UserAccessErr;
+ };
+type DataBox = 
+ service {
+   avlSM: () -> (Result_13) query;
+   canisterState: () -> (Result_12) query;
+   clearall: () -> (Result_1);
+   cycleBalance: () -> (Result_11) query;
+   deleteShareFile: (text, principal) -> (Result_1);
+   deleteSharedFile: (text) -> (Result_1);
+   deletekey: (text) -> (Result_1);
+   deleteother: (text, FileLocation__1) -> (Result_1);
+   getAssetextkey: (text) -> (Result_3) query;
+   getAssetexts: () -> (Result_10) query;
+   getCipher: (GET) -> (Result_9) query;
+   getDefaultDeviceShareDap: (text) -> (Result_1) query;
+   getFileShareOther: (text) -> (Result_8) query;
+   getOtherkey: (text, FileLocation__1) -> (Result_7) query;
+   getOwner: () -> (principal) query;
+   getPlain: (GET) -> (Result_6) query;
+   getShareFiles: () -> (Result_5) query;
+   getSharedAesPublic: (text) -> (Result_1) query;
+   getThumbnail: (text) -> (Result_4) query;
+   getVersion: () -> (nat) query;
+   http_request: (HttpRequest) -> (HttpResponse) query;
+   put: (FilePut) -> (Result_3);
+   "record": (OtherFile) -> (Result_2);
+   setShareFile: (text, principal, text) -> (Result_1);
+   streamingCallback: (StreamingToken) ->
+    (StreamingCallbackHttpResponse) query;
+   upload: (Avatar) -> (Result);
+   wallet_receive: () -> (nat);
+ };
+type Chunk = record {data: blob;};
+type Avatar = 
+ record {
+   data: blob;
+   data_type: text;
+ };
+type AssetExt = 
+ record {
+   aes_pub_key: opt text;
+   bucket_id: principal;
+   file_extension: text;
+   file_key: text;
+   file_name: text;
+   need_query_times: nat;
+   total_size: nat64;
+   upload_status: bool;
+ };
+service : (principal) -> DataBox
