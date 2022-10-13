@@ -1,4 +1,4 @@
-use ic_agent::{Agent, identity::Secp256k1Identity, ic_types::Principal};
+use ic_agent::{Agent, identity::Secp256k1Identity};
 use ic_agent::agent::http_transport::ReqwestHttpReplicaV2Transport;
 use garcon::Delay;
 use std::fs;
@@ -6,7 +6,7 @@ use std::path::Path;
 use std::ffi::OsStr;
 use sha256::digest_bytes;
 use rayon::prelude::*;
-use candid::{Encode, Decode, Nat};
+use candid::{Encode, Decode, Nat, Principal};
 mod databox_did;
 pub use databox_did::{ClearAllResult, DeleteKeyResult, UploadResult, Avatar, PUT, Chunk, FilePut, PutResult, DataErr, FileExt, GetAssetExtKeyResult, GET, GetPlainResult, CanisterStateResult, CycleBalanceResult, AvlSMResult, GetAssetExtsResult};
 

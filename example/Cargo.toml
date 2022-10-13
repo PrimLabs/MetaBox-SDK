@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 metabox-sdk = { path = "../../MetaBox-SDK" }
 tokio = { version = "1", features = ["full"] }
-candid = "0.7.16"
+candid = "0.8.2"

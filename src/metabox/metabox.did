@@ -1,0 +1,147 @@
+type UpgradeBoxArgs = 
+ record {
+   info: BoxInfo;
+   install_args: vec nat8;
+ };
+type UpdateWasmArgs = 
+ record {
+   box_type: BoxType;
+   wasm: vec nat8;
+ };
+type TransferError = 
+ variant {
+   BadFee: record {expected_fee: Token;};
+   InsufficientFunds: record {balance: Token;};
+   TxCreatedInFuture;
+   TxDuplicate: record {duplicate_of: BlockIndex;};
+   TxTooOld: record {allowed_window_nanos: nat64;};
+ };
+type TopUpArgs = 
+ record {
+   box_id: principal;
+   icp_amount: nat64;
+ };
+type Token = record {e8s: nat64;};
+type Result_4 = 
+ variant {
+   err: Error;
+   ok: principal;
+ };
+type Result_3 = 
+ variant {
+   err: Error;
+   ok: text;
+ };
+type Result_2 = 
+ variant {
+   err: TransferError;
+   ok: BlockIndex__1;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: text;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type MetaBox = 
+ service {
+   addAdmin: (principal) -> (bool);
+   changeAdmin: (vec principal) -> (bool);
+   clearLog: () -> ();
+   createBox: (CreateBoxArgs) -> (Result_4);
+   createXid: () -> (principal);
+   deleteBox: (DelBoxArgs) -> (Result_3);
+   getAdmins: () -> (vec principal) query;
+   getBoxes: (principal) -> (vec BoxInfo__1) query;
+   getLog: () -> (vec record {
+                        nat;
+                        text;
+                      }) query;
+   getNameFromPrincipal: (principal) -> (opt text) query;
+   getPrincipalFromName: (text) -> (opt principal) query;
+   getProfile: (principal) -> (opt principal) query;
+   getProfileWasm: () -> (text) query;
+   getXid: () -> (opt principal) query;
+   installCycleWasm: (vec nat8) -> (Result);
+   mintBox: (principal, BoxType__1, text) -> (text);
+   setName: (text) -> (Result);
+   startBox: (BoxInfo__1) -> ();
+   stopBox: (BoxInfo__1) -> ();
+   topUpBox: (TopUpArgs) -> (Result);
+   transferOutICP: (AccountIdentifier, nat64) -> (Result_2);
+   updateBoxInfo: (BoxInfo__1) -> (Result);
+   update_wasm: (UpdateWasmArgs) -> (Result_1);
+   upgradeBox: (UpgradeBoxArgs) -> (Result);
+   wallet_receive: () -> ();
+ };
+type Error = 
+ variant {
+   Invalid_Operation;
+   LedgerTransferError: nat;
+   NameRepeat;
+   Named;
+   NoBox;
+   NotifyCreateError: nat;
+   OnlyDataBoxCanDeleted;
+   SomethingErr;
+   UnAuthorized;
+ };
+type DelBoxArgs = 
+ record {
+   box_type: BoxType;
+   canisterId: principal;
+   cycleTo: opt principal;
+ };
+type CreateBoxArgs = 
+ record {
+   icp_amount: nat64;
+   install_args: vec nat8;
+   metadata: BoxMetadata;
+ };
+type BoxType__1 = 
+ variant {
+   data_box;
+   profile;
+   xid;
+ };
+type BoxType = 
+ variant {
+   data_box;
+   profile;
+   xid;
+ };
+type BoxStatus = 
+ variant {
+   running;
+   stopped;
+ };
+type BoxMetadata = 
+ record {
+   box_name: text;
+   box_type: BoxType;
+   is_private: bool;
+ };
+type BoxInfo__1 = 
+ record {
+   box_name: text;
+   box_type: BoxType;
+   canister_id: principal;
+   is_private: bool;
+   status: BoxStatus;
+ };
+type BoxInfo = 
+ record {
+   box_name: text;
+   box_type: BoxType;
+   canister_id: principal;
+   is_private: bool;
+   status: BoxStatus;
+ };
+type BlockIndex__1 = nat64;
+type BlockIndex = nat64;
+type AccountIdentifier = blob;
+service : () -> MetaBox
